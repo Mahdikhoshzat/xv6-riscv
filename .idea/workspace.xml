@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a4586d75-86b6-492d-b2ca-66aed70c2f32" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/xv6-riscv.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kernel/top.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user/history.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user/test.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user/top.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/console.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/console.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/defs.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/defs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/param.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/param.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/proc.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/proc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/proc.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/proc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/syscall.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/syscall.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/syscall.h" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/syscall.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/sysproc.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/sysproc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kernel/trap.c" beforeDir="false" afterPath="$PROJECT_DIR$/kernel/trap.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/user.h" beforeDir="false" afterPath="$PROJECT_DIR$/user/user.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user/usys.pl" beforeDir="false" afterPath="$PROJECT_DIR$/user/usys.pl" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="2e3qHkqZxvKXoNdvVFZCpNE52Ns" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="cmake.loaded.for.project" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RunManager">
+    <configuration name="gdb kernel" type="CLion_Remote" version="1" remoteCommand="127.0.0.1:12331" symbolFile="$PROJECT_DIR$/kernel/kernel" sysroot="">
+      <debugger kind="GDB" isBundled="true" />
+      <pathMapping remote=":/home/xv6/xv6-riscv" local="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a4586d75-86b6-492d-b2ca-66aed70c2f32" name="Changes" comment="" />
+      <created>1711143523640</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711143523640</updated>
+      <workItem from="1711143525193" duration="675000" />
+      <workItem from="1711184169651" duration="597000" />
+      <workItem from="1711185070738" duration="7000" />
+      <workItem from="1711367689639" duration="261000" />
+      <workItem from="1711367964968" duration="5160000" />
+      <workItem from="1711387314672" duration="597000" />
+      <workItem from="1711634453733" duration="9000" />
+      <workItem from="1711701098570" duration="171000" />
+      <workItem from="1711701299970" duration="1561000" />
+      <workItem from="1711736228979" duration="9279000" />
+      <workItem from="1711788984831" duration="738000" />
+      <workItem from="1711789742048" duration="8502000" />
+      <workItem from="1711799867578" duration="4445000" />
+      <workItem from="1711887159483" duration="937000" />
+      <workItem from="1711906712447" duration="2096000" />
+      <workItem from="1711909347569" duration="4911000" />
+      <workItem from="1711926736471" duration="2961000" />
+      <workItem from="1711962615776" duration="19795000" />
+      <workItem from="1712012956230" duration="1166000" />
+      <workItem from="1712132452816" duration="5881000" />
+      <workItem from="1712139167733" duration="17550000" />
+      <workItem from="1712162584918" duration="1603000" />
+      <workItem from="1712164641454" duration="334000" />
+      <workItem from="1712233450580" duration="2000" />
+      <workItem from="1712234494581" duration="172000" />
+      <workItem from="1712924439571" duration="8777000" />
+      <workItem from="1712940223890" duration="738000" />
+      <workItem from="1713287004649" duration="484000" />
+      <workItem from="1714458054970" duration="425000" />
+      <workItem from="1714460424894" duration="533000" />
+      <workItem from="1714464716474" duration="3090000" />
+      <workItem from="1714482774537" duration="2264000" />
+      <workItem from="1715619023441" duration="9724000" />
+      <workItem from="1716058157401" duration="3436000" />
+      <workItem from="1716368067251" duration="5543000" />
+      <workItem from="1716477523918" duration="9059000" />
+      <workItem from="1716537313273" duration="9714000" />
+      <workItem from="1716556356175" duration="20268000" />
+      <workItem from="1716619783026" duration="4931000" />
+      <workItem from="1716643442969" duration="2963000" />
+      <workItem from="1716745779473" duration="1306000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
