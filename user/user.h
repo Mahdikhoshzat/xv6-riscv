@@ -1,3 +1,4 @@
+#include "kernel/top.h"
 struct stat;
 
 // system calls
@@ -22,6 +23,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int history(int);
+int top(struct top_system_struct*);
 
 // ulib.c
 int stat(const char*, struct stat*);

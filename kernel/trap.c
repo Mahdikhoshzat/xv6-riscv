@@ -163,10 +163,30 @@ kerneltrap()
 void
 clockintr()
 {
-  acquire(&tickslock);
-  ticks++;
-  wakeup(&ticks);
-  release(&tickslock);
+    acquire(&tickslock);
+    ticks++;
+    wakeup(&ticks);
+    release(&tickslock);
+//    struct proc *p = myproc();
+//    if (p && p->state == RUNNING) {
+////        printf("\n\t salam %d \t\n", p->pid);
+//        acquire(&p->lock);
+//        p->rtime++;
+//        release(&p->lock);
+//    }
+
+//    if (p == 0) {
+//        printf("myproc() returned NULL\n");
+//    } else {
+//        if (p->state != RUNNING) {
+//            printf("Process %d is not running, state: %d\n", p->pid, p->state);
+//        } else {
+//            printf("\n\t salam %d \t\n", p->pid);
+//            acquire(&p->lock);
+//            p->rtime++;
+//            release(&p->lock);
+//        }
+//    }
 }
 
 // check if it's an external interrupt or software interrupt,

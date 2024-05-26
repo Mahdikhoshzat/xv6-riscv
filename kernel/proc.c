@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "top.h"
 
 struct cpu cpus[NCPU];
 
@@ -33,7 +34,7 @@ void
 proc_mapstacks(pagetable_t kpgtbl)
 {
   struct proc *p;
-  
+
   for(p = proc; p < &proc[NPROC]; p++) {
     char *pa = kalloc();
     if(pa == 0)
@@ -48,7 +49,7 @@ void
 procinit(void)
 {
   struct proc *p;
-  
+
   initlock(&pid_lock, "nextpid");
   initlock(&wait_lock, "wait_lock");
   for(p = proc; p < &proc[NPROC]; p++) {
@@ -93,7 +94,7 @@ int
 allocpid()
 {
   int pid;
-  
+
   acquire(&pid_lock);
   pid = nextpid;
   nextpid = nextpid + 1;
@@ -110,11 +111,10 @@ static struct proc*
 allocproc(void)
 {
   struct proc *p;
-
   for(p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
     if(p->state == UNUSED) {
-      goto found;
+        goto found;
     } else {
       release(&p->lock);
     }
@@ -236,7 +236,7 @@ userinit(void)
 
   p = allocproc();
   initproc = p;
-  
+
   // allocate one user page and copy initcode's instructions
   // and data into it.
   uvmfirst(p->pagetable, initcode, sizeof(initcode));
@@ -311,7 +311,8 @@ fork(void)
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
-
+  np->ctime = ticks;
+  np->rtime = 0;
   release(&np->lock);
 
   acquire(&wait_lock);
@@ -372,7 +373,7 @@ exit(int status)
 
   // Parent might be sleeping in wait().
   wakeup(p->parent);
-  
+
   acquire(&p->lock);
 
   p->xstate = status;
@@ -428,7 +429,7 @@ wait(uint64 addr)
       release(&wait_lock);
       return -1;
     }
-    
+
     // Wait for a child to exit.
     sleep(p, &wait_lock);  //DOC: wait-sleep
   }
@@ -441,34 +442,126 @@ wait(uint64 addr)
 //  - swtch to start running that process.
 //  - eventually that process transfers control
 //    via swtch back to the scheduler.
+//void
+//scheduler(void)
+//{
+//    struct proc *p;
+//    struct cpu *c = mycpu();
+////    uint start_ticks, end_ticks;
+//
+//    c->proc = 0;
+//    for(;;){
+//        // Avoid deadlock by ensuring that devices can interrupt.
+//        intr_on();
+//
+//        for(p = proc; p < &proc[NPROC]; p++) {
+//            acquire(&p->lock);
+//            if(p->state == RUNNABLE) {
+//                // Switch to chosen process.  It is the process's job
+//                // to release its lock and then reacquire it
+//                // before jumping back to us.
+//
+////                start_ticks = ticks;
+//
+//                p->state = RUNNING;
+//                p->rtime++;
+//                c->proc = p;
+//                swtch(&c->context, &p->context);
+//
+////                acquire(&tickslock);
+////                ticks++;
+////                release(&tickslock);
+////                end_ticks = ticks;
+////                p->rtime += (end_ticks - start_ticks);
+//                // Process is done running for now.
+//                // It should have changed its p->state before coming back.
+//                c->proc = 0;
+//            }
+//            release(&p->lock);
+//        }
+//    }
+//}
+
 void
 scheduler(void)
 {
-  struct proc *p;
-  struct cpu *c = mycpu();
-  
-  c->proc = 0;
-  for(;;){
-    // Avoid deadlock by ensuring that devices can interrupt.
-    intr_on();
+    struct proc *p;
+    struct cpu *c = mycpu();
 
-    for(p = proc; p < &proc[NPROC]; p++) {
-      acquire(&p->lock);
-      if(p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
+    c->proc = 0;
+    int turn = 0;
+    int candidate = 0;
 
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
-      }
-      release(&p->lock);
+    static int qs[] = {5, 10, 20};
+//    int j;
+
+    for(;;){
+//        printf("\n");
+//        printf("The loop for turn %d\n", turn);
+        intr_on();
+//        j = 0;
+        for(p = proc; p < &proc[NPROC]; p++) {
+//            j++;
+//            printf("searching for j = %d\n", j);
+            acquire(&p->lock);
+            if (p->priority == turn && p->state == RUNNABLE) {
+                candidate = 1;
+//                p->state = RUNNING;
+//                c->proc = p;
+                int q = qs[p->priority];
+//                printf("A process found with pid %d with priority %d\n", p->pid, p->priority);
+//                printf("The q value for this process is %d\n", q);
+                printf("The process %d with priority %d is going to be scheduled for %d quantum\n", p->pid, p->priority, q);
+                for (int i = 0; i < q; i++) {
+//                    printf("i is %d\n", i);
+                    p->state = RUNNING;
+                    p->rtime++;
+                    c->proc = p;
+                    swtch(&c->context, &p->context);
+//                    printf("Process %d: quantum %d\n", p->pid, i+1);
+//                    printf("The process state is %d\n", p->state);
+                    if (p->state == ZOMBIE || p->state == UNUSED) {
+                        break;
+                    }
+                }
+                printf("The process %d's execution is gonna be stopped.\n", p->pid, q);
+                if(p->priority < 2){
+                    p->priority++;
+                }
+                c->proc = 0;
+            }
+            release(&p->lock);
+        }
+        if (candidate) {
+            candidate = 0;
+            turn = 0;
+        }
+        else {
+//            printf("\n");
+//            printf("No process found with priority %d\n", turn);
+            turn += 1;
+            turn %= 3;
+        }
     }
-  }
+}
+
+
+uint
+getctime(struct proc *p)
+{
+    acquire(&p->lock);
+    uint ctime = p->ctime;
+    release(&p->lock);
+    return ctime;
+}
+
+uint
+getrtime(struct proc *p)
+{
+    acquire(&p->lock);
+    uint rtime = p->rtime;
+    release(&p->lock);
+    return rtime;
 }
 
 // Switch to scheduler.  Must hold only p->lock
@@ -489,7 +582,8 @@ sched(void)
   if(mycpu()->noff != 1)
     panic("sched locks");
   if(p->state == RUNNING)
-    panic("sched running");
+      panic("sched running");
+
   if(intr_get())
     panic("sched interruptible");
 
@@ -536,7 +630,7 @@ void
 sleep(void *chan, struct spinlock *lk)
 {
   struct proc *p = myproc();
-  
+
   // Must acquire p->lock in order to
   // change p->state and then call sched.
   // Once we hold p->lock, we can be
@@ -615,7 +709,7 @@ int
 killed(struct proc *p)
 {
   int k;
-  
+
   acquire(&p->lock);
   k = p->killed;
   release(&p->lock);
@@ -680,4 +774,105 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+uint64 history(int requested) {
+    for (int i = 0; i < sharedStructPtr->numOfCommandsInMem; ++i) {
+        printf("Command %d: %s", i+1, sharedStructPtr->bufferArr[i]);
+    }
+    printf("Requested %d: %s", requested, sharedStructPtr->bufferArr[requested - 1]);
+    return 0;
+}
+
+int count_running_processes(void) {
+    int count = 0;
+    struct proc *p;
+
+    acquire(&pid_lock); // Lock the process table to prevent race conditions
+    for(p = proc; p < &proc[NPROC]; p++) {
+        if(p->state == RUNNING) {
+            count++;
+        }
+    }
+    release(&pid_lock); // Release the lock
+
+    return count;
+}
+
+int count_sleeping_processes(void) {
+    int count = 0;
+    struct proc *p;
+
+    acquire(&pid_lock); // Lock the process table to prevent race conditions
+    for(p = proc; p < &proc[NPROC]; p++) {
+        if(p->state == SLEEPING) {
+            count++;
+        }
+    }
+    release(&pid_lock); // Release the lock
+
+    return count;
+}
+
+int count_total_processes(void) {
+    int count = 0;
+    struct proc *p;
+
+    acquire(&pid_lock); // Lock the process table to prevent race conditions
+    for(p = proc; p < &proc[NPROC]; p++) {
+        // Increment the count for each process, regardless of its state
+        if(p->state != UNUSED) { // Skip unused processes
+            count++;
+        }
+    }
+    release(&pid_lock); // Release the lock
+
+    return count;
+}
+
+
+uint64 top(struct top_system_struct* top_result){
+//    for(volatile int i = 0; i < 1000000; i++);
+    top_result->uptime = ticks / 10;
+    top_result->running_process = count_running_processes();
+    top_result->sleeping_process = count_sleeping_processes();
+    top_result->total_process = count_total_processes();
+
+
+    char *states[] = {
+            [UNUSED]    "unused",
+            [USED]      "used",
+            [SLEEPING] "sleeping",
+            [RUNNABLE] "runnable",
+            [RUNNING]   "running",
+            [ZOMBIE]    "zombie"
+    };
+
+    struct proc *p;
+
+    int cnt = 0;
+    acquire(&pid_lock);
+    for(p = proc; p < &proc[NPROC]; p++) {
+        if(p->state == UNUSED){
+            continue;
+        }
+        else{
+            top_result->ticktick = keepRunning;
+            top_result->p_list[cnt].pid = p->pid;
+//            top_result->p_list[cnt].time = p->ctime;
+            top_result->p_list[cnt].time = (ticks - getctime(p)) / 10;
+            top_result->p_list[cnt].cpu_usage = (getrtime(p) * 10) / top_result->uptime;
+//            top_result->p_list[cnt].cpu_usage = getrtime(p) / top_result->uptime;
+            strncpy(top_result->p_list[cnt].name, p->name,16);
+            strncpy(top_result->p_list[cnt].state, states[p->state],10);
+            if(p->parent != 0) {
+                top_result->p_list[cnt].ppid = p->parent->pid;
+            } else {
+                top_result->p_list[cnt].ppid = 0;
+            }
+        }
+        cnt++;
+    }
+    release(&pid_lock);
+    return 0;
 }

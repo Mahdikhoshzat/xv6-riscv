@@ -1,3 +1,25 @@
+#include "top.h"
+#define MAX_HISTORY 16
+#define INPUT_BUF_SIZE 128
+
+#ifndef SHARED_STRUCT_H
+#define SHARED_STRUCT_H
+
+//implement of history system call
+typedef struct {
+    char bufferArr[MAX_HISTORY][INPUT_BUF_SIZE];
+    uint lengthsArr[MAX_HISTORY];
+    uint lastCommandIndex;
+    int numOfCommandsInMem;
+    int currentHistory;
+} historyBufferArray;
+
+extern historyBufferArray* sharedStructPtr;
+
+#endif
+
+extern int keepRunning;
+
 struct buf;
 struct context;
 struct file;
@@ -8,6 +30,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+
 
 // bio.c
 void            binit(void);
@@ -106,6 +129,9 @@ void            yield(void);
 int             either_copyout(int user_dst, uint64 dst, void *src, uint64 len);
 int             either_copyin(void *dst, int user_src, uint64 src, uint64 len);
 void            procdump(void);
+uint64          history(int);
+uint64          top(struct top_system_struct*);
+uint64          ctrl_c(void);
 
 // swtch.S
 void            swtch(struct context*, struct context*);

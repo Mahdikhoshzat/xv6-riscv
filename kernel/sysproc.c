@@ -5,6 +5,7 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "top.h"
 
 uint64
 sys_exit(void)
@@ -88,4 +89,33 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64 sys_history(void) {
+    int myInt;
+    argint(0, &myInt);
+    history(myInt);
+    return 0;
+}
+
+uint64 sys_top(void){
+//    printf("\nStart\n");
+    if(((ticks - keepRunning) / 10) < 3){
+//        printf("\nExiting...\n");
+        return 0;
+    }
+    struct top_system_struct *user_top;
+    struct top_system_struct kernel_top;
+    argaddr(0, (uint64 *)&user_top);
+    struct proc *p = myproc();
+    copyin(p->pagetable, (char*)user_top, (uint64)&kernel_top, sizeof(kernel_top));
+    acquire(&tickslock);
+    int err = top(&kernel_top);
+    release(&tickslock);
+    copyout(p->pagetable, (uint64)user_top, (char*)&kernel_top, sizeof(kernel_top));
+    if(err != 0){
+        return err;
+    }
+    return 0;
+
 }
